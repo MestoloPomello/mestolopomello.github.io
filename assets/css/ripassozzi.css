@@ -1,6 +1,4 @@
 body {
-    color: darkturquoise;
-    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -46,22 +44,15 @@ body {
 
 .footer-bar {
     position: fixed;
-    /* La barra sarà posizionata in fondo allo schermo */
     bottom: 0;
-    /* Posizione in basso */
     left: 0;
-    /* Allineamento a sinistra */
     width: 100%;
-    /* Occupa tutta la larghezza */
     background-color: #333;
     color: darkturquoise;
     padding: 10px 20px;
-    /* Padding sopra e sotto */
     box-sizing: border-box;
-    /* Include il padding nel calcolo della larghezza */
 }
 
 .footer-bar span {
     margin-right: 20px;
-    /* Margine a destra tra gli elementi */
 }

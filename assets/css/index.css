@@ -3,7 +3,6 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
 }
 
 .container {
@@ -36,7 +35,7 @@ body {
     padding: 10px 20px;
     margin: 5px;
     background-color: #444444;
-    color: #ffffff;
+    color: darkturquoise;
     text-decoration: none;
     border-radius: 5px;
     border: 2px solid transparent;
