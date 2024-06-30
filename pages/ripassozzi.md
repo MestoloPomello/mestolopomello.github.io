@@ -1,6 +1,6 @@
 ---
 layout: default
-title: MestoloPomello - Ripassozzi
+title: Ripassozzi - MestoloPomello
 permalink: /ripassozzi/
 ---
 
