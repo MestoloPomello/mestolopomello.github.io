@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="{{ " ./assets/css/sidebar.css" | relative_url }}">
+<script src="{{ " ./assets/scripts/sidebar.js" | relative_url }}"></script>
+<div class="sidebar">
+    {% include logo.html %}
+    <ul class="menu">
+        <li class="menu-item">
+            <a href="/">Home</a>
+        </li>
+        <li class="menu-item has-submenu">
+            <a href="#">Ripassozzi</a>
+            <ul class="submenu">
+                <li><a href="{{ '/ripassozzi/' | relative_url }}">IS4</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
