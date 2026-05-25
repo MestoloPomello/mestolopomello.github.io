@@ -1,0 +1,129 @@
+.content {
+    width: min(960px, 92vw);
+}
+
+.cdt-review {
+    padding-bottom: 32px;
+}
+
+.cdt-review__header {
+    align-items: flex-end;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.cdt-review__header h1 {
+    margin: 0;
+}
+
+.cdt-review__stats {
+    color: #f3f7f7;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.95rem;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.cdt-card {
+    background-color: #333;
+    border: 2px solid darkturquoise;
+    border-radius: 8px;
+    box-sizing: border-box;
+    padding: 22px;
+}
+
+.cdt-card__question {
+    color: #f3f7f7;
+    font-size: 1.25rem;
+    line-height: 1.45;
+    margin: 0 0 20px;
+}
+
+.cdt-card__label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.cdt-card__input {
+    background-color: #242424;
+    border: 2px solid #4fd6d6;
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: #f3f7f7;
+    font: inherit;
+    line-height: 1.45;
+    min-height: 180px;
+    padding: 12px;
+    resize: vertical;
+    width: 100%;
+}
+
+.cdt-card__input:focus {
+    outline: 3px solid rgba(0, 206, 209, 0.25);
+}
+
+.cdt-card__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.cdt-card__actions button {
+    background-color: darkturquoise;
+    border: 2px solid darkturquoise;
+    border-radius: 6px;
+    color: #1f1f1f;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    min-height: 42px;
+    padding: 9px 18px;
+}
+
+.cdt-card__actions button.secondary {
+    background-color: #444;
+    color: darkturquoise;
+}
+
+.cdt-card__actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.cdt-card__answer {
+    border-top: 1px solid rgba(0, 206, 209, 0.45);
+    color: #f3f7f7;
+    line-height: 1.5;
+    margin-top: 22px;
+    padding-top: 18px;
+}
+
+.cdt-card__answer h2 {
+    color: darkturquoise;
+    font-size: 1.05rem;
+    margin: 0 0 8px;
+}
+
+.cdt-card__answer p {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 700px) {
+    .cdt-review__header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cdt-review__stats {
+        justify-content: flex-start;
+    }
+
+    .cdt-card {
+        padding: 16px;
+    }
+}
