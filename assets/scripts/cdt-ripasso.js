@@ -9,15 +9,21 @@
     const currentCount = document.getElementById('current-count');
     const totalCount = document.getElementById('total-count');
     const sectionName = document.getElementById('section-name');
+    const randomMode = document.getElementById('random-mode');
+    const jumpForm = document.getElementById('jump-form');
+    const questionNumber = document.getElementById('question-number');
 
     let questions = [];
     let deck = [];
     let currentQuestion = null;
-    let shownCount = 0;
+    let currentQuestionIndex = null;
+    let sequenceIndex = 0;
 
     document.addEventListener('DOMContentLoaded', loadQuestions);
     submitButton.addEventListener('click', revealAnswer);
     nextButton.addEventListener('click', showNextQuestion);
+    randomMode.addEventListener('change', handleModeChange);
+    jumpForm.addEventListener('submit', jumpToQuestion);
     userAnswer.addEventListener('keydown', (event) => {
         if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
             revealAnswer();
@@ -33,6 +39,7 @@
 
             questions = await response.json();
             totalCount.textContent = questions.length;
+            questionNumber.max = questions.length;
             resetDeck();
             showNextQuestion();
         } catch (error) {
@@ -43,22 +50,38 @@
     }
 
     function resetDeck() {
-        deck = [...questions];
+        deck = questions.map((question, index) => index);
         shuffle(deck);
-        shownCount = 0;
+        if (currentQuestionIndex !== null) {
+            deck = deck.filter((questionIndex) => questionIndex !== currentQuestionIndex);
+        }
     }
 
     function showNextQuestion() {
-        if (deck.length === 0) {
-            resetDeck();
+        if (randomMode.checked) {
+            if (deck.length === 0) {
+                resetDeck();
+            }
+
+            displayQuestion(deck.pop());
+            return;
         }
 
-        currentQuestion = deck.pop();
-        shownCount += 1;
+        if (sequenceIndex >= questions.length) {
+            sequenceIndex = 0;
+        }
 
+        displayQuestion(sequenceIndex);
+        sequenceIndex += 1;
+    }
+
+    function displayQuestion(questionIndex) {
+        currentQuestionIndex = questionIndex;
+        currentQuestion = questions[questionIndex];
         questionText.textContent = currentQuestion.question;
         sectionName.textContent = currentQuestion.section || '';
-        currentCount.textContent = shownCount;
+        currentCount.textContent = questionIndex + 1;
+        questionNumber.value = questionIndex + 1;
         userAnswer.value = '';
         userAnswer.disabled = false;
         submitButton.disabled = false;
@@ -67,6 +90,32 @@
         answerPanel.hidden = true;
         correctAnswer.textContent = '';
         userAnswer.focus();
+    }
+
+    function handleModeChange() {
+        if (randomMode.checked) {
+            resetDeck();
+            return;
+        }
+
+        sequenceIndex = currentQuestionIndex === null ? 0 : currentQuestionIndex + 1;
+    }
+
+    function jumpToQuestion(event) {
+        event.preventDefault();
+
+        questionNumber.setCustomValidity('');
+        const requestedNumber = Number.parseInt(questionNumber.value, 10);
+        if (!Number.isInteger(requestedNumber) || requestedNumber < 1 || requestedNumber > questions.length) {
+            questionNumber.setCustomValidity(`Inserisci un numero tra 1 e ${questions.length}.`);
+            questionNumber.reportValidity();
+            return;
+        }
+
+        const questionIndex = requestedNumber - 1;
+        displayQuestion(questionIndex);
+        sequenceIndex = questionIndex + 1;
+        deck = deck.filter((deckIndex) => deckIndex !== questionIndex);
     }
 
     function revealAnswer() {

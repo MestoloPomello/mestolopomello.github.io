@@ -15,6 +15,19 @@ permalink: /ripasso-cdt/
         </div>
     </header>
 
+    <div class="cdt-controls">
+        <label class="cdt-controls__toggle" for="random-mode">
+            <input id="random-mode" type="checkbox" checked>
+            <span>Domande casuali</span>
+        </label>
+
+        <form id="jump-form" class="cdt-controls__jump">
+            <label for="question-number">Vai alla domanda</label>
+            <input id="question-number" type="number" min="1" step="1" inputmode="numeric">
+            <button type="submit">Vai</button>
+        </form>
+    </div>
+
     <section class="cdt-card" aria-live="polite">
         <p id="question-text" class="cdt-card__question">Caricamento...</p>
 
