@@ -6,7 +6,7 @@ permalink: /ripasso-cdt/
 
 <link rel="stylesheet" href="{{ '/assets/css/cdt-ripasso.css' | relative_url }}">
 
-<main class="cdt-review" data-source="{{ '/assets/data/cdt_domande.json' | relative_url }}">
+<main class="cdt-review" data-source="https://docs.google.com/document/d/1pg_QptGUfTunYv6bEqsgqH_4y9FM9uuPj5RMYU3MstQ/export?format=md" data-source-format="markdown">
     <header class="cdt-review__header">
         <h1>Ripasso CDT</h1>
         <div class="cdt-review__stats">

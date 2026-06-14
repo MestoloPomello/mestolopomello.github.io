@@ -32,21 +32,97 @@
 
     async function loadQuestions() {
         try {
-            const response = await fetch(reviewRoot.dataset.source);
+            const response = await fetch(reviewRoot.dataset.source, { cache: 'no-store' });
             if (!response.ok) {
                 throw new Error('Impossibile caricare le domande');
             }
 
-            questions = await response.json();
-            totalCount.textContent = questions.length;
-            questionNumber.max = questions.length;
-            resetDeck();
-            showNextQuestion();
+            if (reviewRoot.dataset.sourceFormat === 'json') {
+                questions = await response.json();
+            } else {
+                questions = parseCdtMarkdown(await response.text());
+            }
+
+            if (questions.length === 0) {
+                throw new Error('Nessuna domanda trovata');
+            }
+
+            refreshQuestionSet(0);
         } catch (error) {
             questionText.textContent = 'Errore nel caricamento delle domande.';
             submitButton.disabled = true;
             userAnswer.disabled = true;
         }
+    }
+
+    function parseCdtMarkdown(markdown) {
+        const parsedQuestions = [];
+        const lines = markdown.replace(/\r\n/g, '\n').split('\n');
+        let currentSection = '';
+        let currentQuestion = null;
+        let answerLines = [];
+        let readingAnswer = false;
+
+        function saveCurrentQuestion() {
+            if (!currentQuestion) {
+                return;
+            }
+
+            parsedQuestions.push({
+                section: currentSection,
+                question: currentQuestion.trim(),
+                answer: answerLines.join('\n').trim()
+            });
+        }
+
+        lines.forEach((line) => {
+            const sectionMatch = line.match(/^##\s+(.+)$/);
+            const questionMatch = line.match(/^###\s+(.+)$/);
+            const answerMatch = line.match(/^Risposta:\s*(.*)$/);
+
+            if (sectionMatch && !questionMatch) {
+                saveCurrentQuestion();
+                currentSection = sectionMatch[1].trim();
+                currentQuestion = null;
+                answerLines = [];
+                readingAnswer = false;
+                return;
+            }
+
+            if (questionMatch) {
+                saveCurrentQuestion();
+                currentQuestion = questionMatch[1].trim();
+                answerLines = [];
+                readingAnswer = false;
+                return;
+            }
+
+            if (!currentQuestion) {
+                return;
+            }
+
+            if (answerMatch) {
+                readingAnswer = true;
+                answerLines.push(answerMatch[1]);
+                return;
+            }
+
+            if (readingAnswer) {
+                answerLines.push(line);
+            }
+        });
+
+        saveCurrentQuestion();
+        return parsedQuestions.filter((question) => question.answer.length > 0);
+    }
+
+    function refreshQuestionSet(preferredIndex) {
+        totalCount.textContent = questions.length;
+        questionNumber.max = questions.length;
+        currentQuestionIndex = null;
+        sequenceIndex = 0;
+        resetDeck();
+        displayQuestion(Math.min(preferredIndex, questions.length - 1));
     }
 
     function resetDeck() {
@@ -92,6 +168,20 @@
         userAnswer.focus();
     }
 
+    function revealAnswer() {
+        if (!currentQuestion || answerPanel.hidden === false) {
+            return;
+        }
+
+        correctAnswer.textContent = currentQuestion.answer;
+        answerPanel.hidden = false;
+        userAnswer.disabled = true;
+        submitButton.disabled = true;
+        submitButton.hidden = true;
+        nextButton.hidden = false;
+        nextButton.focus();
+    }
+
     function handleModeChange() {
         if (randomMode.checked) {
             resetDeck();
@@ -116,20 +206,6 @@
         displayQuestion(questionIndex);
         sequenceIndex = questionIndex + 1;
         deck = deck.filter((deckIndex) => deckIndex !== questionIndex);
-    }
-
-    function revealAnswer() {
-        if (!currentQuestion || answerPanel.hidden === false) {
-            return;
-        }
-
-        correctAnswer.textContent = currentQuestion.answer;
-        answerPanel.hidden = false;
-        userAnswer.disabled = true;
-        submitButton.disabled = true;
-        submitButton.hidden = true;
-        nextButton.hidden = false;
-        nextButton.focus();
     }
 
     function shuffle(array) {
